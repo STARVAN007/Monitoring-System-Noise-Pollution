@@ -1,0 +1,254 @@
+<div class="row">
+    <div class="col-lg-12">
+        <h1 class="page-header">Tablero Principal</h1>
+    </div>
+</div>
+<div class="row" ng-show="dashboard.distrito">
+    <div class="col-lg-3 col-md-6" ng-show="dashboard.incidencias">
+        <div class="panel panel-red">
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col-xs-3">
+                        <i class="fa fa-map-marker fa-5x"></i>
+                    </div>
+                    <div class="col-xs-9 text-right">
+                        <div class="huge">{{dashboard.total_incidencias}}</div>
+                        <div>Incidencias registradas</div>
+                    </div>
+                </div>
+            </div>
+            <!--<a href="#">
+                <div class="panel-footer">
+                    <span class="pull-left">View Details</span>
+                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                    <div class="clearfix"></div>
+                </div>
+            </a>-->
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col-xs-3">
+                        <i class="fa fa-road fa-5x"></i>
+                    </div>
+                    <div class="col-xs-9 text-right">
+                        <div class="huge">{{dashboard.zonas.length}}</div>
+                        <div>Zonas registradas</div>
+                    </div>
+                </div>
+            </div>
+            <!--<a href="#">
+                <div class="panel-footer">
+                    <span class="pull-left">View Details</span>
+                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                    <div class="clearfix"></div>
+                </div>
+            </a>-->
+        </div>
+    </div>
+    <!--<div class="col-lg-3 col-md-6">
+        <div class="panel panel-green">
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col-xs-3">
+                        <i class="fa fa-signal fa-5x"></i>
+                    </div>
+                    <div class="col-xs-9 text-right">
+                        <div class="huge">{{dashboard.zona_demandada.zona}}</div>
+                        <div>Más contaminación</div>
+                    </div>
+                </div>
+            </div>
+            <a href="#">
+                <div class="panel-footer">
+                    <span class="pull-left">View Details</span>
+                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                    <div class="clearfix"></div>
+                </div>
+            </a>
+        </div>
+    </div>-->
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-green">
+            <div class="panel-heading">
+                Tablero de incidencias <b ng-show="dashboard.alert" class="blink">[ Ultima Noticia : {{dashboard.alert.verb}} => Latitud : {{dashboard.alert.data.latitud}}, Longitud : {{dashboard.alert.data.longitud}}, Temperatura : {{dashboard.alert.data.temperatura}}°C, Humedad : {{dashboard.alert.data.humedad}}% ]</b>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-3">
+                        <label>Departamento : </label>
+                        <select class="form-control" ng-options="d as d.departamento for d in dashboard.departamentos track by d.departamento_id" ng-model="dashboard.departamento" ng-change="dashboard.loadProvincias()">
+                            <option value="">[ Departamento ]</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label>Provincia : </label>
+                        <select class="form-control" ng-options="p as p.provincia for p in dashboard.provincias track by p.provincia_id" ng-model="dashboard.provincia" ng-change="dashboard.loadDistritos()">
+                            <option value="">[ Provincia ]</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label>Distrito : </label>
+                        <select class="form-control" ng-options="d as d.distrito for d in dashboard.distritos track by d.distrito_id" ng-model="dashboard.distrito" ng-change="dashboard.loadZonas()">
+                            <option value="">[ Distrito ]</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label>Zona : </label>
+                        <select class="form-control" ng-disabled="dashboard.zonas.length == 0 || !dashboard.zonas" ng-options="z as z.zona for z in dashboard.zonas track by z.zona_id" ng-model="dashboard.zona" ng-change="dashboard.loadZonaId()">
+                            <option value="">[ Zona ]</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row" style="margin-top: 10px;">
+                    <div class="col-md-12">
+                        <ng-map map-type-control="false" scrollwheel="false" zoom="{{(dashboard.distrito ? 16 : 5)}}" style="height: 500px !important" class="shadow" center="{{(!dashboard.distrito ? '-8.822012, -75.516735' : dashboard.distrito.latitud+', '+dashboard.distrito.longitud)}}" map-type-id="ROADMAP">
+                            <marker ng-repeat="item in dashboard.incidencias" position="{{item.latitud}}, {{item.longitud}}"
+                              animation="DROP"
+                              on-click="dashboard.showDetailsMarker(event, item)"></marker>
+                            <shape ng-repeat="item in (dashboard.zona.zona_id ? dashboard.zona_seleccionada : dashboard.zonas)" name="polygon" 
+                             paths="[{{item.path}}]"
+                             on-click="dashboard.showDetailsPolygon(event, item)"
+                             stroke-color="{{item.stroke_color}}"
+                             stroke-opacity="0.8"
+                             stroke-weight="2"
+                             fill-color="{{item.fill_color}}"
+                             fill-opacity="0.35">
+                            </shape>
+                            <info-window id="marker">
+                                <div ng-non-bindable="">
+                                    <h4 class="text-center">Datos del marcador</h4>
+                                    <b>Longitud : </b>{{dashboard.marker.longitud}}<br />
+                                    <b>Latitud : </b>{{dashboard.marker.latitud}}<br />
+                                    <b>Humedad : </b>{{dashboard.marker.humedad}}%<br />
+                                    <b>Temperatura : </b>{{dashboard.marker.temperatura}}°C<br />
+                                    <b>Velocidad Viento : </b>{{dashboard.marker.velocidad_viento}}Km/h<br />
+                                    <b>Sonómetro : </b>{{dashboard.marker.sonometro}}dB<br />
+                                    <b>Fecha y Hora : </b>{{dashboard.marker.hora_incidencia | date: 'dd/MM/yyyy HH:mm:ss'}}
+                                </div>
+                            </info-window>
+                            <info-window id="zone" position="{{dashboard.zone.position}}">
+                                <div ng-non-bindable="">
+                                    <h4>ZONA : </h4>{{dashboard.zone.zona}}
+                                </div>
+                            </info-window>
+                        </ng-map>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row" ng-show="dashboard.distrito && !dashboard.zona">
+    <div class="col-md-12">
+        <div class="panel panel-primary">
+            <div class="panel-heading">Leyenda de zonas</div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-3" ng-repeat="item in dashboard.zonas">
+                        <p class="text-center"><!--<a ng-click="dashboard.loadZonaId(item.zona_id)">--><b>{{item.zona}}</b><!--</a>--></p>
+                        <p class="text-center"><span class="add-on" style="background-color: {{item.stroke_color}}; border-color: {{item.stroke_color}};"></span>&nbsp;&nbsp;&nbsp;<span class="add-on" style="background-color: {{item.fill_color}}; border-color: {{item.fill_color}};"></span></p>
+                    </div>
+                </div>
+            </div> 
+        </div>
+    </div>
+</div>
+<div class="row" ng-show="dashboard.distrito && dashboard.zona">
+    <div class="col-md-12">
+        <div class="panel panel-primary">
+            <div class="panel-heading">Zona seleccionada</div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h3 class="text-center" ng-repeat="item in dashboard.zonas | filter:{ zona_id : dashboard.zona.zona_id }">Se seleccionó la zona : <b>{{item.zona}}</b></h3>
+                    </div>
+                </div>
+            </div> 
+        </div>
+    </div>
+</div>
+<div class="row"  style="margin-bottom: 10px;" ng-show="dashboard.distrito && dashboard.zona">
+    <div class="col-md-3 col-md-offset-9">
+        <button type="button" class="btn btn-primary btn-block" ng-click="dashboard.show_details = true" ng-disabled="dashboard.bandera.length == 0"><i class="glyphicon glyphicon-eye-open"></i>&nbsp;Visualizar</button>
+    </div>
+</div>
+<div class="row" ng-show="dashboard.distrito && dashboard.zona && dashboard.show_details && dashboard.bandera.length > 0">
+    <div class="col-md-12">
+        <div class="panel panel-red">
+            <div class="panel-heading">Tablero detalle de Zona</div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-3">
+                        <h2>ZONA: <span class="label label-danger">{{dashboard.zona_seleccionada_auxiliar.zona}}</span></h2>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="row">
+                            <div class="col-md-12 text-center">
+                                <span>{{dashboard.zona_seleccionada_auxiliar.referencia_inicial}} / {{dashboard.zona_seleccionada_auxiliar.referencia_final}}</span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 text-center">
+                                <b>{{dashboard.zona_seleccionada_auxiliar.tipo_zona_id.tipo_zona}}</b>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group text-center">
+                            <label>Límite Máximo Permitido (LMP) : </label>
+                            <input type="text" class="form-control text-center" placeholder="LMP" ng-value="((dashboard.turno == '' || dashboard.turno == undefined) ? '0' : dashboard.turno.niveles[2].desde) + ' dB'" readonly>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3">
+                        <label>Desde : </label>
+                        <p class="input-group">
+                          <input type="text" class="form-control text-center" uib-datepicker-popup="dd/MM/yyyy" ng-model="dashboard.dt_desde" is-open="dashboard.status.opened_dt_desde" current-text="Hoy" clear-text="Limpiar" close-text="Cerrar" readonly ng-change="dashboard.dt_hasta = dashboard.dt_desde" />
+                          <span class="input-group-btn">
+                            <button type="button" class="btn btn-primary" ng-click="dashboard.open($event, 'dt_desde')" ng-disabled="dashboard.bandera.length == 0"><i class="glyphicon glyphicon-calendar"></i></button>
+                          </span>
+                        </p>
+                    </div>
+                    <div class="col-md-3">
+                        <label>Hasta : </label>
+                        <p class="input-group">
+                          <input type="text" class="form-control text-center" uib-datepicker-popup="dd/MM/yyyy" ng-model="dashboard.dt_hasta" is-open="dashboard.status.opened_dt_hasta" current-text="Hoy" clear-text="Limpiar" close-text="Cerrar" min-date="dashboard.dt_desde" readonly/>
+                          <span class="input-group-btn">
+                            <button type="button" class="btn btn-info" ng-click="dashboard.open($event, 'dt_hasta')" ng-disabled="dashboard.bandera.length == 0"><i class="glyphicon glyphicon-calendar"></i></button>
+                          </span>
+                        </p>
+                    </div>
+                    <div class="col-md-3">
+                        <label>Turno : </label>
+                        <select class="form-control" ng-options="t as t.turno for t in dashboard.turnos track by t.turno_id" ng-model="dashboard.turno" name="turno" ng-disabled="dashboard.bandera.length == 0">
+                            <option value="">[ Turno ]</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label>Acción : </label>
+                        <button type="button" class="btn btn-info btn-block" ng-click="dashboard.showDetailZona()" ng-disabled="!dashboard.turno || dashboard.bandera.length == 0"><i class="glyphicon glyphicon-stats"></i>&nbsp;Visualizar detalle</button>
+                    </div>
+                </div>
+                <div class="row" ng-show="dashboard.bandera.length > 0">
+                    <div class="col-md-12">
+                        <highchart config="dashboard.graphZona" class="span10"></highchart>
+                    </div>
+                </div>
+                <div class="row" ng-show="dashboard.bandera.length == 0">
+                    <div class="col-md-12 text-center">
+                        <h2>No se encontraron datos para mostrar.</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="panel-footer">
+                Datos extraídos en tiempo real.
+            </div>
+        </div>
+    </div>
+</div>

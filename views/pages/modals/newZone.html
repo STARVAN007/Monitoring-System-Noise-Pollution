@@ -1,0 +1,143 @@
+<div class="modal-header dialog-header-error">
+    <h4 class="modal-title"><span class="glyphicon glyphicon-road"></span>&nbsp;Nueva zona</h4>
+</div>
+<div class="modal-body">
+	<form>
+		<div class="row">
+			<div class="col-md-4">
+				<div class="form-group">
+					<label for="departamento">Departamento : </label>
+					<select class="form-control" name="departamento" id="departamento" ng-options="d as d.departamento for d in newZone.departamentos track by d.departamento_id" ng-model="newZone.departamento" ng-change="newZone.loadProvincias()">
+						<option value="">[ Departamento ]</option>
+					</select>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="form-group">
+					<label for="provincia">Provincia : </label>
+					<select class="form-control" name="provincia" id="provincia" ng-options="p as p.provincia for p in newZone.provincias track by p.provincia_id" ng-model="newZone.provincia" ng-change="newZone.loadDistritos()">
+						<option value="">[ Provincia ]</option>
+					</select>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="form-group">
+					<label for="distrito">Distrito : </label>
+					<select class="form-control" name="distrito" id="distrito" ng-options="d as d.distrito for d in newZone.distritos track by d.distrito_id" ng-model="newZone.distrito" ng-change="newZone.loadZonas()">
+						<option value="">[ Distrito ]</option>
+					</select>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-4">
+				<div class="form-group">
+					<label for="tipo_zona">Tipo Zona : </label>
+					<select class="form-control" name="tipo_zona" id="tipo_zona" ng-options="tp as tp.tipo_zona for tp in newZone.tipo_zonas track by tp.tipo_zona_id" ng-model="newZone.tipo_zona">
+						<option value="">[ Tipo Zona ]</option>
+					</select>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="form-group">
+					<label for="zona">Zona : </label>
+					<input type="text" class="form-control" name="zona" id="zona" placeholder="Zona" ng-model="newZone.zona">
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="form-group">
+					<label for="limite_permitido">Límite Permitido : </label>
+					<input type="number" min="0" max="200" class="form-control" name="limite_permitido" id="limite_permitido" placeholder="Límite permitido" ng-model="newZone.limite_permitido">
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-6">
+				<div class="form-group">
+					<label for="referencia_inicial">Referencia Inicial : </label>
+					<input type="text" class="form-control" name="referencia_inicial" id="referencia_inicial" placeholder="Referencia Inicial" ng-model="newZone.referencia_inicial"></input>
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="form-group">
+					<label for="referencia_final">Referencia Final : </label>
+					<input type="text" class="form-control" name="referencia_final" id="referencia_final" placeholder="Referencia Final" ng-model="newZone.referencia_final"></input>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12">
+				<img style="position:absolute" class="shadow" src="https://maps.googleapis.com/maps/api/staticmap?key=AIzaSyBY7UYBRSoJlhOjPJk_l8CDSyCs3x1WwSM&center=-6.4852935,-76.3695053&zoom=14&size=568x300">
+				<ng-map zoom="14" scrollwheel="false" map-type-control="false"
+				    center="-6.4852935, -76.3695053" 
+				    map-type-id="ROADMAP"
+				    lazy-init="true"
+				    id="foo">
+				   <shape ng-repeat="item in newZone.zonas" name="polygon" 
+				     paths="[{{item.path}}]"
+				     stroke-color="{{item.stroke_color}}"
+				     stroke-opacity="0.8"
+				     stroke-weight="2"
+				     fill-color="{{item.fill_color}}"
+				     fill-opacity="0.35">
+				   </shape>
+				 </ng-map>
+			</div>
+		</div>
+		<div class="row" style="margin-top: 10px;">
+			<div class="col-md-4">
+				<button type="button" class="btn btn-danger btn-block" ng-click="newZone.showData()" ng-disabled="!newZone.create">Ver coordenadas&nbsp;<i class="glyphicon glyphicon-screenshot"></i></button>
+			</div>
+			<div class="col-md-4">
+				<button type="button" class="btn btn-info btn-block" ng-click="newZone.resetPolygon()" ng-disabled="!newZone.create">Resetear polígono&nbsp;<i class="glyphicon glyphicon-refresh"></i></button>
+			</div>
+			<div class="col-md-4">
+				<button type="button" class="btn btn-success btn-block" ng-click="newZone.gettinMap()" ng-disabled="newZone.create">Crear polígono&nbsp;<i class="glyphicon glyphicon-wrench"></i></button>
+			</div>
+		</div>
+		<div class="row" ng-show="newZone.message" style="margin-top: 10px;">
+			<div class="col-md-12">
+				<div class="bs-callout bs-callout-danger">
+				    <h4>Mensaje del sistema</h4>
+				    Tiene que dibujar primero el polígono para generar las coordenadas.
+				</div>
+			</div>
+		</div>
+		<div class="row" style="margin-top: 10px;" ng-show="newZone.path">
+			<div class="col-md-{{newZone.stroke_color ? '2' : '6'}}">
+				<div class="form-group">
+					<button colorpicker class="btn btn-info {{newZone.stroke_color ? '' : 'btn-block'}}" type="button" colorpicker-position="top" ng-model="newZone.stroke_color">Línea</button>
+				</div>
+			</div>
+			<div class="col-md-1" ng-show="newZone.stroke_color">
+				<span class="add-on" style="background-color: {{newZone.stroke_color}}; border-color: {{newZone.stroke_color}}; margin-top: 5px;"></span>
+			</div>
+			<div class="col-md-3" ng-show="newZone.stroke_color">
+				<input type="text" class="form-control text-center" placehodler="Línea" readonly ng-value="newZone.stroke_color | uppercase">
+			</div>
+			<div class="col-md-{{newZone.fill_color ? '2' : '6'}}">
+				<div class="form-group">
+					<button colorpicker class="btn btn-danger {{newZone.fill_color ? '' : 'btn-block'}}" type="button" colorpicker-position="top" ng-model="newZone.fill_color">Fondo</button>
+				</div>
+			</div>
+			<div class="col-md-1" ng-show="newZone.fill_color">
+				<span class="add-on" style="background-color: {{newZone.fill_color}}; border-color: {{newZone.fill_color}}; margin-top: 5px;"></span>
+			</div>
+			<div class="col-md-3" ng-show="newZone.fill_color">
+				<input type="text" class="form-control text-center" placehodler="Fondo" readonly ng-value="newZone.fill_color | uppercase">
+			</div>
+		</div>
+		<div class="row" ng-show="newZone.path" style="margin-top: 10px;">
+			<div class="col-md-12">
+				<div class="form-group">
+					<label for="zona">Path generado : </label>
+					<textarea class="form-control" rows="3">{{newZone.path}}</textarea>
+				</div>
+			</div>
+		</div>
+	</form>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary" type="button" ng-click="newZone.saveZona()" ng-disabled="!newZone.distrito || !newZone.zona || !newZone.path || !newZone.stroke_color || !newZone.fill_color">Guardar</button>
+    <button class="btn btn-warning" type="button" ng-click="newZone.cancel()">Cancelar</button>
+</div>

@@ -1,0 +1,104 @@
+<div class="row">
+    <div class="col-lg-12">
+        <h1 class="page-header">Listado de incidencias</h1>
+    </div>
+    <!-- /.col-lg-12 -->
+</div>
+<div class="row">
+	<div class="col-lg-12">
+		<div class="panel panel-primary">
+			<div class="panel-heading">
+				Incidencias registradas
+			</div>
+			<div class="panel-body">
+				<div class="row">
+					<div class="col-md-2">
+						<a class="btn btn-danger" ui-sref="gettin.data"><i class="glyphicon glyphicon-map-marker"></i>&nbsp;Nueva Incidencia</a>
+					</div>
+					<div class="col-md-2">
+						<select class="form-control" ng-options="z as z.zona for z in incidencias.zonas track by z.zona_id" name="zonas" id="zonas" ng-model="incidencias.zona" ng-change="incidencias.loadGrid()">
+							<option value="">[ Todas ]</option>
+						</select>
+					</div>
+					<div class="col-md-2">
+						<select class="form-control" ng-options="t as t.turno for t in incidencias.turnos track by t.turno_id" ng-model="incidencias.turno" name="turno" id="turno" ng-change="incidencias.loadGrid()">
+							<option value="">[ Todos ]</option>
+						</select>
+					</div>
+					<div class="col-md-2">
+						<p class="input-group">
+                          <input type="text" class="form-control text-center" uib-datepicker-popup="dd/MM/yyyy" ng-model="incidencias.dt_desde" is-open="incidencias.status.opened_dt_desde" current-text="Hoy" clear-text="Limpiar" close-text="Cerrar" readonly ng-change="incidencias.loadGrid()" />
+                          <span class="input-group-btn">
+                            <button type="button" class="btn btn-primary" ng-click="incidencias.open($event, 'dt_desde')"><i class="glyphicon glyphicon-calendar"></i></button>
+                          </span>
+                        </p>
+					</div>
+					<div class="col-md-2">
+						<p class="input-group">
+                          <input type="text" class="form-control text-center" uib-datepicker-popup="dd/MM/yyyy" ng-model="incidencias.dt_hasta" is-open="incidencias.status.opened_dt_hasta" current-text="Hoy" clear-text="Limpiar" close-text="Cerrar" min-date="incidencias.dt_desde" ng-change="incidencias.loadGrid()" readonly/>
+                          <span class="input-group-btn">
+                            <button type="button" class="btn btn-info" ng-click="incidencias.open($event, 'dt_hasta')"><i class="glyphicon glyphicon-calendar"></i></button>
+                          </span>
+                        </p>
+					</div>
+					<div class="col-md-2">
+						<button type="button" class="btn btn-success btn-block" ng-click="incidencias.showGraphs()">Gráficos&nbsp;<span class="glyphicon glyphicon-stats"></span></button>
+					</div>
+				</div>
+				<div class="row" ng-show="!incidencias">
+					<spinner></spinner>
+				</div>
+				<div class="row" ng-show="incidencias">
+					<div class="col-md-12">
+						<div class="table-responsive">
+							<table class="table table-bordered">
+								<thead>
+									<tr>
+										<th class="text-center" valign="middle">#</th>
+										<th class="text-center" valign="middle">Latitud</th>
+										<th class="text-center" valign="middle">Longitud</th>
+										<th class="text-center" valign="middle">Temperatura</th>
+										<th class="text-center" valign="middle">Humedad</th>
+										<th class="text-center" valign="middle">Velocidad Viento</th>
+										<th class="text-center" valign="middle">Fecha y Hora</th>
+										<th class="text-center" valign="middle">Sonometro</th>
+										<th class="text-center" valign="middle">Zona</th>
+										<th class="text-center" valign="middle">Turno</th>
+										<th class="text-center" valign="middle">Factor</th>
+										<th class="text-center" valign="middle">Nivel</th>
+									</tr>
+								</thead>
+								<tbody ng-show="incidencias.incidencias.length > 0">
+									<tr ng-repeat="item in incidencias.incidencias">
+										<td class="text-center">{{item.incidencia_id}}</td>
+										<td class="text-center">{{item.latitud}}</td>
+										<td class="text-center">{{item.longitud}}</td>
+										<td class="text-center">{{item.temperatura}}°C</td>
+										<td class="text-center">{{item.humedad | number:2}}%</td>
+										<td class="text-center">{{item.velocidad_viento | number:2}}Km/h</td>
+										<td class="text-center">{{item.hora_incidencia | date:"dd/MM/yyyy hh:mm:ss"}}</td>
+										<td class="text-center">{{item.sonometro}} dB</td>
+										<td class="text-center">{{item.zona_id.zona}}</td>
+										<td class="text-center">{{item.turno_id.turno}}</td>
+										<td class="text-center">{{item.factor_id.factor}}</td>
+										<td class="text-center"><span class="label label-{{(item.nivel_id.nivel == 'BAJO') ? 'success' : ((item.nivel_id.nivel == 'MEDIO') ? 'warning' : 'danger')}}">{{item.nivel_id.nivel}}</span></td>
+									</tr>
+								</tbody>
+								<tbody ng-show="incidencias.incidencias.length == 0">
+									<tr>
+										<td class="text-center" colspan="12"><b>No se encontraron datos con los criterios de búsqueda.</b></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-12 text-center">
+						<uib-pagination boundary-links="true" rotate="false" max-size="5" total-items="incidencias.totalItems" ng-model="incidencias.currentPage" items-per-page="incidencias.items_per_page" previous-text="Anterior" next-text="Siguiente" first-text="Primero" last-text="Último" ng-change="incidencias.pageChanged()"></uib-pagination>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

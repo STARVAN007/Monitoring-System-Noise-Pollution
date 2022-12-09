@@ -1,0 +1,102 @@
+<div class="col-md-4 col-md-offset-4" style="margin-top: 20px;">
+	<div class="panel panel-primary">
+        <div class="panel-heading">
+            Obtención de información
+        </div>
+        <div class="panel-body">
+            <form>
+				<div class="row">
+					<div class="col-md-6">
+						<div class="form-group">
+							<label for="latitud">Latitud : </label>
+							<input type="text" class="form-control text-center" id="latitud" name="latitud" ng-model="process.coordinates.latitude" placeholder="Latitud" readonly>
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="form-group">
+							<label for="longitud">Longitud : </label>
+							<input type="text" class="form-control text-center" id="longitud" name="longitud" ng-model="process.coordinates.longitude" placeholder="Longitud" readonly>
+						</div>
+					</div>
+				</div>
+				<div class="row" ng-show="!process.weather">
+					<spinner></spinner>
+				</div>
+				<div class="row" ng-show="process.weather">
+					<div class="col-md-6">
+						<div class="form-group text-center">
+							<h3>{{process.weather.name}} | {{process.weather.sys.country}}</h3>
+							<img src="http://openweathermap.org/img/w/{{process.weather.weather[0].icon}}.png">
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="form-group text-center">
+							<h2>{{process.weather.main.temp | number:0}} &deg;C</h2>
+							<h3>{{process.weather.weather[0].description | camelcase}}</h3>
+						</div>
+					</div>
+				</div>
+				<div class="row" ng-show="process.weather">
+					<div class="col-md-12">
+						<div class="table-responsive">
+							<table class="table table-bordered">
+								<thead>
+									<tr><th class="text-center" colspan="2">Datos</th></tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td><b>Humedad</b></td>
+										<td class="text-right">{{process.weather.main.humidity}}%</td>
+									</tr>
+									<tr>
+										<td><b>Temperatura mínima</b></td>
+										<td class="text-right">{{process.weather.main.temp_min}}&deg;C</td>
+									</tr>
+									<tr>
+										<td><b>Temperatura máxima</b></td>
+										<td class="text-right">{{process.weather.main.temp_max}}&deg;C</td>
+									</tr>
+									<tr>
+										<td><b>Velocidad del viento</b></td>
+										<td class="text-right">{{process.weather.wind.speed}}Km/h</td>
+									</tr>
+									<tr>
+										<td><b>Zona</b></td>
+										<td class="text-right">
+											<select class="form-control" ng-options="z as z.zona for z in process.zones track by z.zona_id" name="zonas" id="zonas" ng-model="process.zona">
+												<option value="">[ Zona ]</option>
+											</select>
+										</td>
+									</tr>
+									<tr>
+										<td><b>Factores</b></td>
+										<td class="text-right">
+											<select class="form-control" ng-options="f as f.factor for f in process.factores track by f.factor_id" name="factores" id="factores" ng-model="process.factor">
+												<option value="">[ Factor ]</option>
+											</select>
+										</td>
+									</tr>
+									<tr>
+										<td><b>Sonómetro</b></td>
+										<td><input type="number" class="form-control" name="sonometro" placeholder="dB" ng-model="process.sonometro"></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-6">
+						<button type="button" class="btn btn-danger btn-block" ng-disabled="!process.zona || !process.sonometro" ng-click="process.saveIncidencia()">Enviar datos&nbsp;<i class="glyphicon glyphicon-flash"></i></button>
+					</div>
+					<div class="col-md-6">
+						<a ui-sref="access.signin" class="btn btn-success btn-block">Usuario&nbsp;<i class="glyphicon glyphicon-log-in"></i></a>
+					</div>
+				</div>
+			</form>
+        </div>
+        <div class="panel-footer text-center">
+            Sistema de monitoreo para contaminación acústica.
+        </div>
+    </div>
+</div>
