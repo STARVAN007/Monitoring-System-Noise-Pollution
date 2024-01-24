@@ -1,0 +1,72 @@
+<div class="row">
+    <div class="col-lg-12">
+        <h1 class="page-header">Mantenedor de zonas</h1>
+    </div>
+    <!-- /.col-lg-12 -->
+</div>
+<div class="row">
+	<div class="col-lg-12">
+		<div class="panel panel-green">
+			<div class="panel-heading">
+				Mantenedor de zonas
+			</div>
+			<div class="panel-body">
+				<form class="form-inline">
+					<!--<div class="form-group">
+						<label for="filtro">Filtro : &nbsp;</label>
+						<input type="text" class="form-control" id="filtro" name="filtro" placeholder="Ingrese criterio" ng-model="zona.filtro">&nbsp;&nbsp;
+					</div>
+					<button type="click" class="btn btn-danger"><i class="glyphicon glyphicon-search"></i>&nbsp;Buscar</button>-->
+					<button type="click" class="btn btn-info" ng-click="zona.newZone()"><i class="glyphicon glyphicon-list-alt"></i>&nbsp;Nueva zona</button>
+				</form><br>
+				<div class="row">
+					<div class="col-md-12">
+						<div class="table-responsive">
+							<table class="table table-bordered">
+								<thead>
+									<tr>
+										<th class="text-center" valign="middle">#</th>
+										<th class="text-center" valign="middle">Zona</th>
+										<th class="text-center" valign="middle">Distrito</th>
+										<th class="text-center" valign="middle">Color de línea</th>
+										<th class="text-center" valign="middle">Color de fondo</th>
+										<th class="text-center" valign="middle">Referencia Inicial</th>
+										<th class="text-center" valign="middle">Referencia Final</th>
+										<th class="text-center" valign="middle">Límite Máximo Permitido (LMP)</th>
+										<th class="text-center" valign="middle">Acciones</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr ng-repeat="item in zona.zonas">
+										<td class="text-center" valign="middle">{{item.zona_id}}</td>
+										<td class="text-center" valign="middle">{{item.zona | uppercase}}</td>
+										<td class="text-center" valign="middle">{{item.distrito_id.distrito | uppercase}}</td>
+										<td class="text-center" valign="middle">
+											<span class="add-on" style="background-color: {{item.stroke_color}}; border-color: {{item.stroke_color}};"></span><span style="display: block">&nbsp;{{item.stroke_color}}</span>
+										</td>
+										<td class="text-center" valign="middle">
+											<span class="add-on" style="background-color: {{item.fill_color}}; border-color: {{item.fill_color}};"></span><span style="display: block">&nbsp;{{item.fill_color}}</span>
+										</td>
+										<td class="text-center">{{item.referencia_inicial}}</td>
+										<td class="text-center">{{item.referencia_final}}</td>
+										<td class="text-center">{{item.limite_maximo}} dB</td>
+										<td class="text-center">
+											<!--<button type="button" class="btn btn-primary"><i class="glyphicon glyphicon-map-marker"></i></button>
+											<button type="button" class="btn btn-warning"><i class="glyphicon glyphicon-pencil"></i></button>-->
+											<button type="button" class="btn btn-danger" ng-click="zona.delete(item.zona_id)" confirm="¿Está seguro de querer eliminar la zona registrada?"><i class="glyphicon glyphicon-remove"></i></button>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-12 text-center">
+						<uib-pagination boundary-links="true" total-items="zona.totalItems" ng-model="zona.currentPage" items-per-page="zona.items_per_page" previous-text="Anterior" next-text="Siguiente" first-text="Primero" last-text="Último" ng-change="zona.pageChanged()"></uib-pagination>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

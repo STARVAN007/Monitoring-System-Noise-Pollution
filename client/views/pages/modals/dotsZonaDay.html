@@ -1,0 +1,83 @@
+<div class="modal-header dialog-header-wait">
+    <h4 class="modal-title"><span class="glyphicon glyphicon-stats"></span>&nbsp;Detalle de zona</h4>
+</div>
+<div class="modal-body">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="panel panel-red">
+				<div class="panel-heading">Puntos de contaminación registrados en la zona ZC01</div>
+				<div class="panel-body">
+					<div class="row">
+	                    <div class="col-md-3">
+	                        <h2>ZONA: <span class="label label-danger">{{dotsZonaDay.datos.zona.zona}}</span></h2>
+	                    </div>
+	                    <div class="col-md-6">
+	                        <div class="row">
+	                            <div class="col-md-12 text-center">
+	                                <span>{{dotsZonaDay.datos.zona.referencia_inicial}} / {{dotsZonaDay.datos.zona.referencia_final}}</span>
+	                            </div>
+	                        </div>
+	                        <div class="row">
+	                            <div class="col-md-12 text-center">
+	                                <b>{{dotsZonaDay.datos.zona.tipo_zona_id.tipo_zona}}</b>
+	                            </div>
+	                        </div>
+	                    </div>
+	                    <div class="col-md-3">
+	                        <div class="form-group text-center">
+	                            <label>LMP : </label>
+	                            <input type="text" class="form-control text-center" placeholder="LMP" ng-value="dotsZonaDay.datos.turno.niveles[2].desde + ' dB'" readonly>
+	                        </div>
+	                    </div>
+	                </div>
+	                <div class="row">
+	                    <div class="col-md-4">
+	                        <label>Desde : </label>
+	                        <input type="text" class="form-control text-center" placeholder="Desde" ng-value="dotsZonaDay.datos.desde | date: 'dd/MM/yyyy'" readonly />
+	                    </div>
+	                    <div class="col-md-4">
+	                        <label>Hasta : </label>
+	                        <input type="text" class="form-control text-center" placeholder="Hasta" ng-value="dotsZonaDay.datos.hasta | date: 'dd/MM/yyyy'" readonly />
+	                    </div>
+	                    <div class="col-md-4">
+	                        <label>Turno : </label>
+	                        <input type="text" class="form-control text-center" placeholder="Turno" ng-value="dotsZonaDay.datos.turno.turno" readonly />
+	                    </div>
+	                </div>
+	                <div class="row" style="margin-top: 10px;">
+						<div class="col-md-12">
+							<img style="position:absolute" class="shadow" src="https://maps.googleapis.com/maps/api/staticmap?key=AIzaSyBY7UYBRSoJlhOjPJk_l8CDSyCs3x1WwSM&center=-6.4852935,-76.3695053&zoom=15&size=536x300">
+							<ng-map zoom="15" scrollwheel="false" map-type-control="false"
+							    center="-6.4852935, -76.3695053" 
+							    map-type-id="ROADMAP"
+							    lazy-init="true"
+							    id="dots">
+							   <shape name="circle" ng-repeat="dot in dotsZonaDay.dots" no-watcher="true"
+							      stroke-color="{{(dot.nivel_id.nivel == 'BAJO') ? 'limegreen' : (dot.nivel_id.nivel == 'MEDIO') ? 'orange' : 'red'}}"
+							      stroke-opacity="0.8"
+							      stroke-weight="2"
+							      fill-color="{{(dot.nivel_id.nivel == 'BAJO') ? 'limegreen' : (dot.nivel_id.nivel == 'MEDIO') ? 'orange' : 'red'}}"
+							      fill-opacity="0.35"
+							      center="[{{dot.latitud}},{{dot.longitud}}]"
+							      on-click="dotsZonaDay.showDetailsIncidente(event, dot)"
+							      radius="1.5">
+							    </shape>
+							 </ng-map>
+						</div>
+					</div>
+					<div class="row" ng-show="dotsZonaDay.dots.length == 0">
+						<div class="col-md-12">
+							<h2>No hay puntos para mostrar.</h2>
+						</div>
+					</div>
+				</div>
+				<div class="panel-footer">
+					Datos extraídos en tiempo real.
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary" type="button" ng-click="dotsZonaDay.cancel()">Cerrar</button>
+</div>

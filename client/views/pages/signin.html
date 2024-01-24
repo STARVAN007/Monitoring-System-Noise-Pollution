@@ -1,0 +1,15 @@
+<h1 class="text-center login-title">¡ Bienvenido a nuestro sistema !</h1>
+<div class="bs-callout bs-callout-{{login.tipo_mensaje}} message" ng-show="login.mensaje">
+    <h4>Mensaje del sistema</h4>
+    {{login.mensaje}}
+</div>
+<div class="account-wall">
+    <img class="profile-img" src="https://cdn-icons-png.flaticon.com/512/219/219983.png"
+        alt="">
+    <form class="form-signin" name="loginForm" ng-submit="login.logIn(login.user.username, login.user.password)" novalidate>
+    <input type="text" class="form-control" placeholder="Usuario" name="username" ng-model="login.user.username" required autofocus>
+    <input type="password" class="form-control" placeholder="Contraseña" name="password" ng-model="login.user.password" required>
+    <button class="btn btn-lg btn-danger btn-block" type="submit" ng-disabled="loginForm.$invalid">Iniciar sesión&nbsp;<i class="glyphicon glyphicon-log-in"></i></button>
+    <a ui-sref="gettin.data" class="btn btn-lg btn-info btn-block">Obtener datos&nbsp;<i class="glyphicon glyphicon-road"></i></a>
+    </form>
+</div>

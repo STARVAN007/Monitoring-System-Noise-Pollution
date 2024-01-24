@@ -1,0 +1,117 @@
+<div class="modal-header dialog-header-error">
+    <h4 class="modal-title"><span class="glyphicon glyphicon-stats"></span>&nbsp;Detalle de zona por rango de fechas</h4>
+</div>
+<div class="modal-body">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="panel panel-primary">
+				<div class="panel-heading">Detalle de zona desde [ {{detailZonaByFechas.datos.desde | date: 'dd/MM/yyyy'}} ] hasta [ {{detailZonaByFechas.datos.hasta | date: 'dd/MM/yyyy'}} ]</div>
+				<div class="panel-body">
+					<div class="row">
+	                    <div class="col-md-3">
+	                        <h2>ZONA: <span class="label label-danger">{{detailZonaByFechas.datos.zona.zona}}</span></h2>
+	                    </div>
+	                    <div class="col-md-6">
+	                        <div class="row">
+	                            <div class="col-md-12 text-center">
+	                                <span>{{detailZonaByFechas.datos.zona.referencia_inicial}} / {{detailZonaByFechas.datos.zona.referencia_final}}</span>
+	                            </div>
+	                        </div>
+	                        <div class="row">
+	                            <div class="col-md-12 text-center">
+	                                <b>{{detailZonaByFechas.datos.zona.tipo_zona_id.tipo_zona}}</b>
+	                            </div>
+	                        </div>
+	                    </div>
+	                    <div class="col-md-3">
+	                        <div class="form-group text-center">
+	                            <label>Límite Máximo Permitido (LMP) : </label>
+	                            <input type="text" class="form-control text-center" placeholder="LMP" ng-value="detailZonaByFechas.datos.turno.niveles[2].desde + ' dB'" readonly>
+	                        </div>
+	                    </div>
+	                </div>
+	                <div class="row">
+	                    <div class="col-md-3">
+	                        <label>Desde : </label>
+	                        <input type="text" class="form-control text-center" placeholder="Desde" ng-value="detailZonaByFechas.datos.desde | date: 'dd/MM/yyyy'" readonly />
+	                    </div>
+	                    <div class="col-md-3">
+	                        <label>Hasta : </label>
+	                        <input type="text" class="form-control text-center" placeholder="Hasta" ng-value="detailZonaByFechas.datos.hasta | date: 'dd/MM/yyyy'" readonly />
+	                    </div>
+	                    <div class="col-md-3">
+	                        <label>Turno : </label>
+	                        <input type="text" class="form-control text-center" placeholder="Turno" ng-value="detailZonaByFechas.datos.turno.turno" readonly />
+	                    </div>
+	                    <div class="col-md-3">
+	                        <label>Acción : </label>
+	                        <button type="button" class="btn btn-success btn-block" ng-click="detailZonaByFechas.showDots()" ng-disabled="detailZonaByFechas.promedio == null"><i class="glyphicon glyphicon-eye-open"></i>&nbsp;Visualizar puntos</button>
+	                    </div>
+	                </div>
+	                <div class="row" style="margin-top: 10px;" ng-show="detailZonaByFechas.promedio != null">
+	                	<div class="col-md-3 text-center">
+	                		<div class="price-block">
+								<div class="plan plan-danger">Promedio</div>
+								<h1 class="hourly">{{detailZonaByFechas.promedio | number:1}} dB</h1>
+							</div>
+	                	</div>
+	                	<div class="col-md-2">
+	                		<div class="row">
+	                			<div class="col-md-12">
+	                				<div class="price-block">
+										<div class="plan plan-primary">Límite</div>
+										<h1 class="hourly">{{detailZonaByFechas.datos.turno.niveles[2].desde}} dB</h1>
+									</div>
+	                			</div>
+	                		</div>
+	                		<div class="row">
+	                			<div class="col-md-12">
+	                				<div class="price-block">
+										<div class="plan plan-warning">Porcentaje</div>
+										<h1 class="hourly">{{detailZonaByFechas.porcentaje | number:0}} %</h1>
+									</div>
+	                			</div>
+	                		</div>
+	                	</div>
+	                	<div class="col-md-3">
+	                		<ul class="semaforo rojo">
+								<li class="shadow{{(detailZonaByFechas.semaforo == 'ALTO') ? ' active blink' : ''}}"></li>
+							</ul>
+							<h2 style="float: left; margin-top: 30px !important; margin-left: 20px !important">ALTO</h2>
+							<div style="clear:both;"></div>
+							<ul class="semaforo naranja">
+								<li class="shadow{{(detailZonaByFechas.semaforo == 'MEDIO') ? ' active blink' : ''}}">
+							</ul>
+							<h2 style="float: left; margin-top: 30px !important; margin-left: 20px !important">MEDIO</h2>
+							<div style="clear:both;"></div>
+							<ul class="semaforo verde">
+								<li class="shadow{{(detailZonaByFechas.semaforo == 'BAJO') ? ' active blink' : ''}}">
+							</ul>
+							<h2 style="float: left; margin-top: 30px !important; margin-left: 20px !important">BAJO</h2>
+	                	</div>
+	                	<div class="col-md-4">
+	                		<label>Efectos nocivos : </label>
+	                		<textarea class="form-control" rows="13" placeholder="Efectos nocivos." readonly>{{(detailZonaByFechas.semaforo == 'ALTO') ? 'La sordera es la dificultad o la imposibilidad de usar el sentido del oído debido a una pérdida de la capacidad auditiva parcial (hipoacusia) o total (cofosis), y unilateral o bilateral. Así pues, una persona sorda será incapaz o tendrá problemas para escuchar. Ésta puede ser un rasgo hereditario o puede ser consecuencia de una enfermedad, traumatismo, exposición a largo plazo al ruido, o medicamentos agresivos para el nervio auditivo.' : 'No presenta efectos nocivos.'}}</textarea>
+	                	</div>
+	                </div>
+	                <div class="row" ng-show="detailZonaByFechas.promedio != null">
+	                    <div class="col-md-12">
+	                        <highchart config="detailZonaByFechas.graphZonaDays" class="span10"></highchart>
+	                    </div>
+	                </div>
+	                <div class="row" ng-show="detailZonaByFechas.promedio == null">
+	                	<div class="col-md-12 text-center">
+	                		<h2>No se encontraron datos para mostrar.</h2>
+	                	</div>
+	                </div>
+				</div>
+				<div class="panel-footer">
+					Datos extraídos en tiempo real.
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-danger" type="button" ng-click="detailZonaByFechas.cancel()">Cerrar</button>
+</div>

@@ -1,0 +1,50 @@
+<div class="modal-header dialog-header-error">
+    <h4 class="modal-title"><span class="glyphicon glyphicon-stats"></span>&nbsp;Gráficos comparativos</h4>
+</div>
+<div class="modal-body">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="panel panel-primary">
+				<div class="panel-heading">Gráficos comparativos desde [ {{graphComparative.datos.desde | date: 'dd/MM/yyyy'}} ] hasta [ {{graphComparative.datos.hasta | date: 'dd/MM/yyyy'}} ]</div>
+				<div class="panel-body">
+	                <div class="row">
+	                    <div class="col-md-12">
+	                        <highchart config="graphComparative.graphZona" class="span10"></highchart>
+	                    </div>
+	                </div>
+	                <div class="row">
+	                	<div class="col-md-12 text-center">
+	                		<h4 style="display: inline-block" ng-repeat="item in graphComparative.zonas_totales | orderBy: 'total' : true">{{item.zona}} : <span class="label label-{{item.color}}">{{item.total}}</span>{{($last) ? '' : '&nbsp;&nbsp;|&nbsp;&nbsp;'}}</h4>
+	                	</div>
+	                </div>
+	                <div class="row">
+	                    <div class="col-md-12">
+	                        <highchart config="graphComparative.graphTurno" class="span10"></highchart>
+	                    </div>
+	                </div>
+	                <div class="row">
+	                	<div class="col-md-12 text-center">
+	                		<h4 style="display: inline-block" ng-repeat="item in graphComparative.turnos_totales | orderBy: 'total' : true">{{item.turno}} : <span class="label label-{{item.color}}">{{item.total}}</span>{{($last) ? '' : '&nbsp;&nbsp;|&nbsp;&nbsp;'}}</h4>
+	                	</div>
+	                </div>
+	                <div class="row">
+	                    <div class="col-md-12">
+	                        <highchart config="graphComparative.graphFactor" class="span10"></highchart>
+	                    </div>
+	                </div>
+	                <div class="row">
+	                	<div class="col-md-12 text-center">
+	                		<h4 style="display: inline-block" ng-repeat="item in graphComparative.factores_totales | orderBy: 'total' : true">{{item.factor}} : <span class="label label-{{item.color}}">{{item.total}}</span>{{($last) ? '' : '&nbsp;&nbsp;|&nbsp;&nbsp;'}}</h4>
+	                	</div>
+	                </div>
+				</div>
+				<div class="panel-footer">
+					Datos extraídos en tiempo real.
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-danger" type="button" ng-click="graphComparative.cancel()">Cerrar</button>
+</div>
